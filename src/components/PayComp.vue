@@ -93,7 +93,7 @@ export default defineComponent({
                     Authorization : `Bearer ${await access_tok(router, load)}`
                 }
             })
-            if(resp.data['done']) montant.value = resp.data['result'], min_pay.value = resp.data['result'], api_key.value = resp.data['key']
+            if(resp.data['done']) montant.value = resp.data['proposed'], min_pay.value = resp.data['result'], api_key.value = resp.data['key']
             load.dismiss()
         }
 
@@ -114,7 +114,7 @@ export default defineComponent({
         }
         
         const open_kkia = () => {
-
+            if (!montant.value) return
             if(montant.value < min_pay.value) return show_alert('Montant invalide', "Le montant ne peut pas être inferieur a " + min_pay.value + " F.")
             addKkiapayListener('success', (response) => {
                 make_payment(response.transactionId)

@@ -63,8 +63,8 @@
           <ion-icon :icon="megaphone" slot="start" />
           <ion-label>Ecrivez-nous ici</ion-label>
         </ion-item>
-        <ion-item button>
-          <ion-icon @click="open_norm_lnk(paramObj['privacy'])" :icon="handLeftOutline" slot="start" />
+        <ion-item @click="open_norm_lnk(paramObj['privacy'])" button>
+          <ion-icon  :icon="handLeftOutline" slot="start" />
           <ion-label>Politique de confidentialité</ion-label>
         </ion-item>
         <ion-item>

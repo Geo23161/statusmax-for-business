@@ -46,12 +46,12 @@
                         </ion-label>
                     </ion-item>
 
-                    <ion-item>
+                    <ion-item v-show="false">
                         <ion-select @ion-change="e => genre = e.detail.value" :value="genre" label="Genre"
                             label-placement="floating" fill="outline">
-                            <ion-select-option value="all" >Hommes et Femmes</ion-select-option>
-                            <ion-select-option value="homme" >Hommes</ion-select-option>
-                            <ion-select-option value="femme" >Femmes</ion-select-option>
+                            <ion-select-option value="all">Hommes et Femmes</ion-select-option>
+                            <ion-select-option value="homme">Hommes</ion-select-option>
+                            <ion-select-option value="femme">Femmes</ion-select-option>
                         </ion-select>
                     </ion-item>
 
@@ -80,11 +80,11 @@
 
                 <ion-list v-else-if="niv == 2" :inset="true" mode="ios">
                     <ion-list-header>
-                        <ion-label>Centre d'Interêts </ion-label>
+                        <ion-label>Catégories </ion-label>
                     </ion-list-header>
 
                     <div style="padding-left: 1rem; padding-right: 1rem;">
-                        <div> Quels pourraient être les centres d'interêt de vos clients? </div>
+                        <div> Choisissez les catégories possibles de votre produit ou service </div>
                         <div style="padding-top: 0.9rem; padding-bottom: 0.3rem;">
                             <ion-item v-for="inter in my_interest" :key="inter.id">
                                 <ion-label> {{ inter.name }} </ion-label>
@@ -126,14 +126,14 @@
                     <div style="padding-left: 1rem; padding-right: 1rem;">
                         <div> Decouvrez le nombre de personne que vous pouvez atteindre </div>
                         <div style="padding-top: 0.9rem; padding-bottom: 0.3rem;">
-                            <ion-item >
-                                <ion-label >
+                            <ion-item>
+                                <ion-label>
                                     {{ result.name }}
                                 </ion-label>
                                 <ion-icon :icon="receipt" slot="start" />
                             </ion-item>
-                            <ion-item >
-                                <ion-label >
+                            <ion-item>
+                                <ion-label>
                                     {{ result.taille }} personnes à atteindre
                                 </ion-label>
                                 <ion-icon :icon="people" slot="start" />
@@ -150,8 +150,8 @@
                     <ion-button mode="ios" v-if="niv < 4" @click="niv++" color="primary">Suivant <ion-icon slot="end"
                             :icon="arrowForward"></ion-icon>
                     </ion-button>
-                    <ion-button mode="ios" :disabled="!result.id" v-else @click="set_campaign()" color="success">Terminer <ion-icon slot="end"
-                            :icon="arrowForward"></ion-icon>
+                    <ion-button mode="ios" :disabled="!result.id" v-else @click="set_campaign()" color="success">Terminer
+                        <ion-icon slot="end" :icon="arrowForward"></ion-icon>
                     </ion-button>
                 </div>
             </div>
@@ -206,7 +206,8 @@ defineProps({
 
 const niv = ref(0)
 watch(niv, (newn, oldn) => {
-    if(newn == 4) create_campaign()
+
+    if (newn == 4) create_campaign()
 })
 
 const emit = defineEmits(['close', 'done'])
@@ -223,10 +224,14 @@ const ages = ref({ lower: 25, upper: 40 })
 const genre = ref('Hommes et Femmes')
 const name = ref("")
 const result = ref({
-    id : 0,
-    name : "",
-    taille : 0
+    id: 0,
+    name: "",
+    taille: 0
 })
+
+const random_name = () => {
+    return "Audience " + Math.floor(Math.random() * 1000)
+}
 
 const handle_ages = (e: any) => {
     ages.value = e.detail.value
@@ -240,36 +245,38 @@ const format_age = (value: number) => {
     return `${10 + Math.round(value / 100 * 60)} ans`
 }
 
-const al = (str : string) => {
-  lieux.value.push(JSON.parse(str))
-  lOpen.value = false;
+const al = (str: string) => {
+    lieux.value.push(JSON.parse(str))
+    lOpen.value = false;
 };
 const router = useRouter()
 
 const create_campaign = async () => {
-    if(my_interest.value.length == 0) my_interest.value.push({
-        id : 0,
-        name : "Tous les centres d'interêt"
+    if (my_interest.value.length == 0) my_interest.value.push({
+        id: 0,
+        name: "Tous les centres d'interêt"
     })
-    if(my_profs.value.length == 0) my_profs.value.push({
-        id : 0,
-        name : "Toutes les professions"
+    if (my_profs.value.length == 0) my_profs.value.push({
+        id: 0,
+        name: "Toutes les professions"
     })
+    if (name.value == "") name.value = random_name()
+    if (lieux.value.length == 0) { niv.value = 1; return show_alert("Aucun lieu choisi", "Veuillez inclure un lieu avant de continuer") }
     const load = await showLoading("Creation. Ca prendra un moment...")
     const resp = await axios.post("api/create_campaign/", {
-        ages : JSON.stringify(ages.value),
-        genre : genre.value,
-        name : name.value,
-        lieux : JSON.stringify(lieux.value),
-        interests : my_interest.value.filter(e => e.id == 0).length ? "all" : JSON.stringify(my_interest.value),
-        professions : my_profs.value.filter(e => e.id ==0).length ? "all" : JSON.stringify(my_profs.value)
+        ages: JSON.stringify(ages.value),
+        genre: genre.value,
+        name: name.value,
+        lieux: JSON.stringify(lieux.value),
+        interests: my_interest.value.filter(e => e.id == 0).length ? "all" : JSON.stringify(my_interest.value),
+        professions: my_profs.value.filter(e => e.id == 0).length ? "all" : JSON.stringify(my_profs.value)
     }, {
-        headers : {
-            Authorization : `Bearer ${await access_tok(router, load)}`
+        headers: {
+            Authorization: `Bearer ${await access_tok(router, load)}`
         }
     })
-    if(resp.data['done']) result.value = resp.data['result'], load.dismiss()
-    
+    if (resp.data['done']) result.value = resp.data['result'], load.dismiss()
+
     setTimeout(() => {
         load.dismiss()
     }, 9000)
@@ -279,13 +286,13 @@ const create_campaign = async () => {
 const set_campaign = async () => {
     const load = await showLoading('Sauvegarde...');
     const resp = await axios.post("api/set_campaign/", {
-        id : result.value.id
+        id: result.value.id
     }, {
-        headers : {
-            Authorization : `Bearer ${await access_tok(router, load)}`
+        headers: {
+            Authorization: `Bearer ${await access_tok(router, load)}`
         }
     })
-    if(resp.data['done']) {
+    if (resp.data['done']) {
         load.dismiss()
         emit('done', resp.data['result'])
     }

@@ -26,19 +26,19 @@
                         <ion-item @click="media.video != '' ? (vOpen = true, cUrl = media.video) : click_img('add:img')"
                             :detail="true" :detail-icon="eye" button>
                             <ion-thumbnail>
-                                <img alt="campagne image" :src="media.image"
-                                    style="margin-right: 0.6rem;" />
+                                <img alt="campagne image" :src="media.image" style="margin-right: 0.6rem;" />
                             </ion-thumbnail>
                             <ion-label class="ion-text-wrap">
-                                <h3 style="padding-left: 0.8rem;" >{{ media.image == '../../img/img_no.jpg' && media.video == '' ? 'Aucun media ajouté' : (media.video != ''
-                                    ? 'Une video ajouté' : 'Une image ajouté') }}</h3>
+                                <h3 style="padding-left: 0.8rem;">{{ media.image == '../../img/img_no.jpg' && media.video ==
+                                    '' ? 'Aucun media ajouté' : (media.video != ''
+                                        ? 'Une video ajouté' : 'Une image ajouté') }}</h3>
 
                             </ion-label>
                         </ion-item>
                     </div>
                     <div style="padding-bottom: 0.7rem;">
-                        <ion-button fill="outline" @click="click_img('file_add')" v-if="!is_submitting" mode="ios" expand="full"
-                            shape="round">
+                        <ion-button fill="outline" @click="click_img('file_add')" v-if="!is_submitting" mode="ios"
+                            expand="full" shape="round">
                             <ion-icon :icon="image" slot="start" /> Choisir un fichier
                         </ion-button>
                         <ion-button fill="outline" v-else expand="full" shape="round">
@@ -57,8 +57,9 @@
                         placeholder="entrez..."></ion-input>
 
                 </ion-item>
-                <ion-item >
-                    <ion-textarea :counter="true" :maxlength="100" label="Slogan" placeholder="votre phrase captivante" @ion-input="e => rtext = (e.target.value as string)" ></ion-textarea>
+                <ion-item>
+                    <ion-textarea :counter="true" :maxlength="100" label="Description" placeholder="petite description..."
+                        @ion-input="e => rtext = (e.target.value as string)"></ion-textarea>
                 </ion-item>
 
                 <!---
@@ -69,10 +70,59 @@
                     </div>
                 </div>
                 -->
-                <ion-item>
-                    <ion-input label="Lien" required @ionInput="(e: any) => lien = e.target.value" 
+                <ion-item v-show="false">
+                    <ion-input label="Lien" required @ionInput="(e: any) => lien = e.target.value"
                         placeholder="site, application,whatsapp,formulaire..."></ion-input>
                 </ion-item>
+            </ion-list>
+            <ion-list mode="ios">
+                <ion-list-header>
+                    <ion-label>Vous joindre</ion-label>
+                </ion-list-header>
+
+                <div style="padding-left: 0.6rem; padding-right: 0.6rem;">
+                    <div> Ajoutez un lien ou un numéro whatsapp pour permettre à un client de vous joindre </div>
+
+                    <div style="padding-top: 0.9rem; padding-bottom: 0.3rem;">
+                        <ion-segment mode="ios" :value="typ_l">
+                            <ion-segment-button @click="typ_l = 'whatsapp'" value="whatsapp">
+                                <ion-label>
+                                    Whatsapp
+                                </ion-label>
+                            </ion-segment-button>
+                            <ion-segment-button @click="typ_l = 'link'" value="link">
+                                <ion-label>Lien</ion-label>
+                            </ion-segment-button>
+                        </ion-segment>
+                        <div v-if="typ_l == 'whatsapp'">
+                            <div style="display: flex; align-items: center; padding: 0.6rem;">
+                                <div style="margin-right: 0.6rem;">
+                                    <ion-item fill="outline" mode="md" color="primary">
+                                        <ion-select required @ionChange="country = $event.detail.value"
+                                            aria-label="Votre pays" :value="country" interface="popover" placeholder="Pays">
+                                            <ion-select-option value="BJ">Benin</ion-select-option>
+                                            <ion-select-option value="TG">Togo</ion-select-option>
+                                            <ion-select-option value="CI">Côte d'Ivoire</ion-select-option>
+                                        </ion-select>
+                                    </ion-item>
+                                </div>
+                                <div style="flex-grow: 1;">
+                                    <ion-item fill="outline" mode="md" color="primary">
+                                        <ion-input required type="number" placeholder="Numéro whatsapp"
+                                            @ionInput="(e) => (number = e.target.value as string)"></ion-input>
+                                    </ion-item>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <ion-item >
+                                <ion-input label="Lien" required @ionInput="(e: any) => mlink = e.target.value"
+                                    placeholder="site, application,formulaire..."></ion-input>
+                            </ion-item>
+                        </div>
+                    </div>
+                </div>
+
             </ion-list>
             <ion-list mode="ios">
                 <ion-list-header>
@@ -95,7 +145,8 @@
                         <div style="padding: 0.6rem; font-size: 0.8rem; text-align: center;">Aucune audience trouvée</div>
                     </div>
                     <div style="padding-bottom: 0.7rem;">
-                        <ion-button fill="outline" @click="aOpen = true" mode="ios" color="primary" expand="full" shape="round">Creer une
+                        <ion-button fill="outline" @click="aOpen = true" mode="ios" color="primary" expand="full"
+                            shape="round">Creer une
                             audience</ion-button>
                     </div>
                 </div>
@@ -111,16 +162,16 @@
                         <ion-item>
 
                             <ion-input label="Budget(en FCFA)" required
-                                @ionInput="(e: any) => montant = (e.target.value ? parseInt(e.target.value) : 0)" :value="montant"
-                                placeholder="entrez un montant"></ion-input>
+                                @ionInput="(e: any) => montant = (e.target.value ? parseInt(e.target.value) : 0)"
+                                :value="montant" placeholder="entrez un montant"></ion-input>
                         </ion-item>
                         <ion-item>
                             <ion-label>
-                                <div >
+                                <div>
                                     <div>Approximation</div>
                                     <h2 :style="{
-                                        color: Math.floor(montant / price * 10) < 100 ? 'red' : 'green'
-                                    }">{{ Math.floor(montant / price * 10) }} vues</h2>
+                                        color: Math.floor(montant / price * 10 + ( (montant / price * 10) > 30 ? 5 : 0)) < 100 ? 'red' : 'green'
+                                    }">{{ Math.floor(montant / price * 10 + ( (montant / price * 10) > 30 ? 5 : 0))  }} vues</h2>
                                 </div>
                             </ion-label>
                             <ion-icon slot="start" :icon="eye"></ion-icon>
@@ -130,9 +181,9 @@
 
             </ion-list>
             <div style="padding-top: 0.6rem; padding-bottom: 0.6rem; padding-left: 1rem; padding-right: 1rem;">
-                <ion-button expand="full" mode="ios"  @click="send_campaign()" color="success" shape="round" >Lancer la campagne <ion-icon slot="end"
-                            :icon="rocket"></ion-icon>
-                    </ion-button>
+                <ion-button expand="full" mode="ios" @click="send_campaign()" color="success" shape="round">Lancer la
+                    campagne <ion-icon slot="end" :icon="rocket"></ion-icon>
+                </ion-button>
             </div>
         </ion-content>
         <audience-comp :is-open="aOpen" @close="aOpen = false"
@@ -167,9 +218,9 @@
 
 <script lang="ts" setup >
 import VidPlayer from '@/components/VidPlayer.vue';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonItem, IonThumbnail, IonLabel, IonList, IonListHeader, IonButton, IonIcon, IonSpinner, IonCheckbox, onIonViewWillEnter, IonTextarea, IonInput } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonItem, IonThumbnail, IonLabel, IonList, IonListHeader, IonButton, IonIcon, IonSpinner, IonCheckbox, onIonViewWillEnter, IonTextarea, IonInput, IonSegment, IonSegmentButton, IonSelect } from '@ionic/vue';
 import { eye, image, link, rocket } from 'ionicons/icons';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { extract_frames, access_tok, showLoading, show_alert, presentToast } from "@/global/utils"
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
@@ -227,12 +278,16 @@ const click_img = (id: string) => {
 const name = ref("")
 const text = ref("Entrez une phrase d'accroche...")
 const rtext = ref("")
-const lien = ref("")
-const price = ref(0)
+const price = computed(() => {
+    return media.value.video != "" ? price_v.value : price_i.value
+})
+
+const price_v = ref(0)
+const price_i = ref(0)
 
 const handle_file = (e: any) => {
     const file = e.target.files[0] as File;
-    if(!file) return 0;
+    if (!file) return 0;
     is_submitting.value = true
     if (file.type.match('video.*')) ready_vid.value = file;
     else ready_image.value = file;
@@ -252,55 +307,55 @@ const get_campaigns = async () => {
         }
     })
     if (resp.data['done']) campaigns.value = resp.data['result']
-    price.value = resp.data['price']
+    price_i.value = resp.data['price:image']
+    price_v.value = resp.data['price:video']
     load.dismiss()
 }
 
 const yOpen = ref(false)
 
 const send_campaign = async () => {
-    if(media.value.id == 0) return show_alert('Media vide', "Veuillez ajouter une image ou une video avant de continuer.")
-    if(name.value == "") return show_alert('Nom vide', "Veuillez choisir un nom pour cette campagne")
-    if(rtext.value == "") return show_alert("Slogan invalide", "Veuillez entrer une phrase d'accroche pouvant captover un potentiel client a cliquer.")
-    if(rtext.value.length > 105) return show_alert("Slogan trop longue", "Votre phrase d'accroche doit cobtenir au plus 100 caractères.") 
-    if(lien.value == "") return show_alert('Lien incorrect', "Veuillez fournir un lien afin de permettre aux clients interessés d'acceder a votre offre ou vous contacter.")
-    if(actual_c.value.id == 0) return show_alert("Audience non valide", "Veuillez choisir ou creer une audience pour votre campagne")
-    if((montant.value / price.value * 10) < 100) return show_alert("Budget invalide", "Votre budget est insuffisant pour lancer une campagne, veuillez l'augmenter.")
+    if (media.value.id == 0) return show_alert('Media vide', "Veuillez ajouter une image ou une video avant de continuer.")
+    if (name.value == "") return show_alert('Nom vide', "Veuillez choisir un nom pour cette campagne")
+    if (rtext.value == "") return show_alert("Slogan invalide", "Veuillez entrer une phrase d'accroche pouvant captover un potentiel client a cliquer.")
+    if (rtext.value.length > 105) return show_alert("Slogan trop longue", "Votre phrase d'accroche doit cobtenir au plus 100 caractères.")
+    if (lien.value == "") return show_alert('Lien incorrect', "Veuillez fournir un lien ou un numero afin de permettre aux clients interessés d'acceder a votre offre ou vous contacter.")
+    if (actual_c.value.id == 0) return show_alert("Audience non valide", "Veuillez choisir ou creer une audience pour votre campagne")
+    if ((montant.value / price.value * 10) < 100) return show_alert("Budget invalide", "Votre budget est insuffisant pour lancer une campagne, veuillez l'augmenter.")
 
     const load = await showLoading('Lancement...')
     const resp = await axios.post("api/create_post/", {
-        media : media.value.id,
-        name : name.value,
-        text : rtext.value,
-        link : lien.value,
-        campaign : actual_c.value.id,
-        budget : montant.value,
+        media: media.value.id,
+        name: name.value,
+        text: rtext.value,
+        link: lien.value,
+        campaign: actual_c.value.id,
+        budget: montant.value,
     }, {
-        headers : {
-            Authorization : `Bearer ${await access_tok(router, load)}`
+        headers: {
+            Authorization: `Bearer ${await access_tok(router, load)}`
         }
     })
-    if(!resp.data['done'] && resp.data['code'] == 350) yOpen.value = true;
-    if(resp.data['done']) load.dismiss(), presentToast("top", "Votre campagne a été lancé avec succès", "success") ,router.push('/tabs/tab1?has_created');
-    
+    if (!resp.data['done'] && resp.data['code'] == 350) yOpen.value = true;
+    if (resp.data['done']) load.dismiss(), presentToast("top", "Votre campagne a été lancé avec succès", "success"), router.push('/tabs/tab1?has_created');
+
 }
 
-const duplicate_data = async (id :string) => {
+const duplicate_data = async (id: string) => {
     const load = await showLoading('Clonage...')
     const resp = await axios.post('api/duplicate_data/', {
         id
     }, {
-        headers : {
-            Authorization : `Bearer ${await access_tok(router, load)}`
+        headers: {
+            Authorization: `Bearer ${await access_tok(router, load)}`
         }
     })
-    if(resp.data['done']){
+    if (resp.data['done']) {
         const r = resp.data['result']
         media.value = r['media']
         name.value = r['name']
         text.value = r['text']
         rtext.value = r['text']
-        lien.value = r['link']
     }
     load.dismiss()
 }
@@ -309,8 +364,24 @@ const route = useRoute()
 
 get_campaigns()
 
+const typ_l = ref('whatsapp')
+const country = ref('BJ')
+const number = ref()
+const mlink = ref('')
+const CONTRY_MAP : any = {
+    'BJ' : '+229',
+    "US": "+1",
+    "FR": "+33",
+    "GB": "+44",
+    "CI": "+225",
+    "TG": "+228"
+}
+const lien = computed(() => {
+    return typ_l.value == 'whatsapp' ? (number.value ? ("https://wa.me/" + CONTRY_MAP[country.value] + number.value) : "") : mlink.value
+})
+
 onIonViewWillEnter(() => {
-    if('duplic' in route.query) duplicate_data(route.query.duplic as string)
+    if ('duplic' in route.query) duplicate_data(route.query.duplic as string)
 })
 
 </script>

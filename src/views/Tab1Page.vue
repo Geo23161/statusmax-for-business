@@ -55,13 +55,13 @@
       </div>
       <div v-else>
         <div class="dems_cont">
-          <div v-for="post in posts" :key="post.id" class="d_sp dem white ">
+          <div v-for="post in posts" :key="post.id" @click="router.push('/post/' + post.id)" class="d_sp dem white ">
             <div class="dem_h">
               <div class="stats">
                 <div :style="{ 'background-color': post.get_status[1] }" class="indic"></div>
                 <div class="stat_title">{{ post.get_status[0] }}</div>
               </div>
-              <div @click="target_post.name = post.name, target_post.id = post.id, aOpen = true" class="dem_menu">
+              <div @click.stop="target_post.name = post.name, target_post.id = post.id, aOpen = true" class="dem_menu">
                 <ion-icon :icon="ellipsisVertical" />
               </div>
             </div>
@@ -414,7 +414,6 @@ const get_posts = async (load?: any) => {
   if (resp.data['done']) {
     posts.value = posts.value.concat(resp.data['result']);
     is_on.value = resp.data['state']
-    console.log(posts.value)
     has_next.value = resp.data['has_next'];
     if (!has_next.value) {
       no_data.value = true
