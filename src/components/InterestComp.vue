@@ -26,7 +26,7 @@
       <div v-if="interests.length">
         <div v-if="interests.length" style="padding-top: 1rem">
           <ion-item  v-for="q in interests" :key="`${q.name}:${q.id}`" @click.prevent="includes_inter(q)">
-            <ion-checkbox :checked="in_i  nter(q)" slot="start"></ion-checkbox>
+            <ion-checkbox :checked="in_inter(q)" slot="start"></ion-checkbox>
             <ion-label class="ion-text-wrap">{{ q.name }}</ion-label>
           </ion-item>
         </div>
