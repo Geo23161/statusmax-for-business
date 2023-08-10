@@ -94,6 +94,7 @@ export default defineComponent({
                 }
             })
             if(resp.data['done']) montant.value = resp.data['proposed'], min_pay.value = resp.data['result'], api_key.value = resp.data['key']
+            
             load.dismiss()
         }
 
@@ -123,7 +124,7 @@ export default defineComponent({
             openKkiapayWidget({
                 amount : montant.value,
                 api_key : api_key.value,
-                sandbox : true, 
+                sandbox : false, 
             })
         }
 
