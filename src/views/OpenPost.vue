@@ -18,10 +18,10 @@
                 @click="post.get_media_typ == 'video' ? (vOpen = true, cUrl = post.get_vid_url) : click_img(post.id + ':img')"
                 :detail="true" :detail-icon="eye" button>
                 <ion-thumbnail>
-                        <img alt="campagne image" :src="post.get_image" style="border-radius: 15px; " />
+                    <img alt="campagne image" :src="post.get_image" style="border-radius: 15px; " />
                 </ion-thumbnail>
                 <ion-label class="ion-text-wrap">
-                    <div style="padding-left: 0.6rem;" >
+                    <div style="padding-left: 0.6rem;">
                         <h3>{{ post.name }}</h3>
                         <p v-html="post.text">
 
@@ -68,6 +68,18 @@
                             </div>
                             <div style="font-size: 1.1rem; font-weight: bolder;">
                                 {{ post.clicks }}
+                            </div>
+                        </div>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>
+                        <div style="display: flex; justify-content: space-between;">
+                            <div style="margin-right: 0.6rem;">
+                                Prospects
+                            </div>
+                            <div style="font-size: 1.1rem; font-weight: bolder;">
+                                {{ post.get_prospects.length }}
                             </div>
                         </div>
                     </ion-label>
@@ -173,6 +185,36 @@
                     </div>
                 </div>
 
+            </ion-list>
+            <ion-list mode="ios">
+                <ion-list-header>
+                    <ion-label>Prospects</ion-label>
+                </ion-list-header>
+                <div style="padding-left: 1rem; padding-right: 1rem;">
+                    <div> Decouvrez le numero whatsapp des utilisateurs ayant été interessés par votre produit ou service
+                    </div>
+                    <div v-if="post.get_prospects.length" style="padding-top: 0.9rem; ">
+                        <ion-item v-for="prospect in propects" :key="prospect">
+                            <ion-avatar slot="start">
+                                <img alt="Silhouette of a person's head"
+                                    src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+                            </ion-avatar>
+                            <ion-label> {{ prospect }} </ion-label>
+                        </ion-item>
+                    </div>
+                    <div class="no_photos" v-else>
+                        <div style="display: flex; justify-content: space-around; padding: 0.8rem;">
+                            <img :src="'../../img/no_data.svg'" style="width: 60%;" />
+                        </div>
+                    </div>
+                </div>
+                <div v-if="res_prospects && (post.get_prospects.length > 3)" @click="res_prospects = false"
+                    style="padding-bottom: 0.7rem;">
+
+                    <ion-button fill="outline" mode="ios" expand="full" shape="round">
+                        <ion-icon :icon="eye" slot="start" /> Voir plus
+                    </ion-button>
+                </div>
             </ion-list>
             <ion-list mode="ios">
                 <ion-list-header>
@@ -298,7 +340,7 @@ import { access_tok, showLoading, show_alert } from '@/global/utils';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonItem, IonThumbnail, IonLabel, IonList, IonListHeader, IonButton, onIonViewDidEnter, onIonViewDidLeave, IonIcon, IonInput } from '@ionic/vue';
 import axios from 'axios';
 import { arrowBack, cash, eye, people, statsChart } from 'ionicons/icons';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const vOpen = ref(false)
@@ -361,7 +403,15 @@ const change_budget = async () => {
     }
 }
 
+
+
 let interval: any = 0;
+
+const res_prospects = ref(true)
+
+const propects = computed(() => {
+    return res_prospects.value ? (post.value.get_prospects as string[]).slice(0, 3) : post.value.get_prospects
+})
 
 const initView = () => {
     id.value = parseInt(route.params.id as string);
