@@ -165,12 +165,12 @@
                                 @ionInput="(e: any) => montant = (e.target.value ? parseInt(e.target.value) : 0)"
                                 :value="montant" placeholder="entrez un montant"></ion-input>
                         </ion-item>
-                        <ion-item>
+                        <ion-item v-show="false" >
                             <ion-label>
                                 <div>
                                     <div>Approximation</div>
                                     <h2 :style="{
-                                        color: Math.floor(montant / price * 10 + ( (montant / price * 10) > 30 ? 5 : 0)) < 100 ? 'red' : 'green'
+                                        color: Math.floor(montant / price * 10 + ((montant / price * 10) > 30 ? 5 : 0)) < 100 ? 'red' : 'green'
                                     }">{{ Math.floor(montant / price * 10 + ( (montant / price * 10) > 30 ? 5 : 0))  }} vues</h2>
                                 </div>
                             </ion-label>
