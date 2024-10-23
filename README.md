@@ -1,4 +1,4 @@
-# StatusMax
+# StatusMax - Dashboard for business
 My ads manager platform.
 
 ## Developpé par 
